@@ -6,11 +6,11 @@
 #    By: guvascon <guvascon@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 17:29:58 by guvascon          #+#    #+#              #
-#    Updated: 2025/04/07 17:34:52 by guvascon         ###   ########.fr        #
+#    Updated: 2025/04/08 17:18:03 by guvascon         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = 
+SRCS = srcs/test.c
 		
 OBJS = $(SRCS:.c=.o)
 
@@ -18,16 +18,25 @@ CC = @cc
 CFLAGS = -g -Wall -Wextra -Werror
 RM = rm -f
 
-PRINTF_PATH = ./ft_printf
-PRINTF = $(PRINTF_PATH)/libftprintf.a
+# PRINTF_PATH = ./ft_printf
+# PRINTF = $(PRINTF_PATH)/libftprintf.a
 
 NAME = so_long
 
-all : $(NAME) 
-$(NAME) : $(OBJS) $(PRINTF)
-	$(CC) $(CFLAGS) $(OBJS) $(PRINTF) -o $(NAME)
+MLX_DIR = minilibx-linux
 
-$(LIBFT):
+MLX = $(MLX_DIR)/libmlx.a 
+
+MLXFLAGS = -lXext -lX11
+
+all : $(NAME) 
+$(NAME) : $(OBJS) $(PRINTF) $(MLX)
+	$(CC) $(CFLAGS) $(OBJS) $(PRINTF) $(MLX) $(MLXFLAGS) -o $(NAME)
+
+$(MLX):
+	@make -s -C ./minilibx-linux
+	
+$(PRINTF):
 	@echo " [ .. ] | Compiling.."
 	@make -s -C $(PRINTF)
 	@echo " [ OK ] | Ready!"
@@ -39,7 +48,6 @@ clean:
 	
 fclean: clean
 	@$(RM) $(NAME) 
-	@make -s fclean -C $(PRINTF_PATH)
 	clear
 	@echo "all files were removed"
 
